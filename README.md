@@ -316,7 +316,7 @@ MIT License - Tự do sử dụng cho mục đích cá nhân và thương mại.
 
 ## 👨‍💻 Tác giả
 
-Được phát triển với ❤️ bởi Claude
+Được phát triển với ❤️ bởi Tychicus Nguyen
 
 ---
 
