@@ -38,7 +38,11 @@ Hệ thống quản trị (Admin CMS) hoàn chỉnh để quản lý đặt vé 
 ### 5. 🎨 Giao diện
 - ✅ Sidebar có thể thu gọn
 - ✅ Responsive trên mọi thiết bị
-- ✅ Tùy chỉnh ẩn/hiện cột trong bảng
+- ✅ **Tùy chỉnh ẩn/hiện cột trong bảng** (Column Visibility Toggle)
+  - Ẩn/hiện từng cột riêng biệt
+  - Lưu cấu hình vào localStorage
+  - Nút "Hiện tất cả" và "Đặt lại"
+  - Áp dụng cho bảng Users và Bookings
 - ✅ Bộ lọc mạnh mẽ
 - ✅ Phân trang thông minh
 - ✅ Thông báo flash message

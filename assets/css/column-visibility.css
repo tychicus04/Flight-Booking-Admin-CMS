@@ -1,0 +1,109 @@
+/* ============================================
+   FILE: assets/css/column-visibility.css
+   Column Visibility Toggle Styles
+   ============================================ */
+
+.column-visibility-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.column-visibility-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 220px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.column-visibility-menu.show {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.column-visibility-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.column-visibility-item:hover {
+    background-color: #f8f9fa;
+}
+
+.column-visibility-item input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.column-visibility-item label {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.column-visibility-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-top: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.column-visibility-footer .btn {
+    padding: 4px 8px;
+    font-size: 13px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .column-visibility-menu {
+        right: auto;
+        left: 0;
+        min-width: 180px;
+    }
+}
+
+/* Scrollbar styling for menu */
+.column-visibility-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.column-visibility-menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.column-visibility-menu::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.column-visibility-menu::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

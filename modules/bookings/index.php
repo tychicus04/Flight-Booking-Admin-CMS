@@ -151,33 +151,33 @@ $bookings = $stmt->fetchAll();
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="bookingsTable">
                         <thead>
                             <tr>
-                                <th>Mã đặt chỗ</th>
-                                <th>Khách hàng</th>
-                                <th>Ngày đặt</th>
-                                <th>Tổng tiền</th>
-                                <th>TT Thanh toán</th>
-                                <th>TT Booking</th>
-                                <th>Người tạo</th>
+                                <th class="col-booking-code">Mã đặt chỗ</th>
+                                <th class="col-customer">Khách hàng</th>
+                                <th class="col-booking-date">Ngày đặt</th>
+                                <th class="col-total-amount">Tổng tiền</th>
+                                <th class="col-payment-status">TT Thanh toán</th>
+                                <th class="col-booking-status">TT Booking</th>
+                                <th class="col-creator">Người tạo</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($bookings as $booking): ?>
                                 <tr>
-                                    <td>
+                                    <td class="col-booking-code">
                                         <a href="detail.php?id=<?= $booking['id'] ?>" class="text-primary fw-bold">
                                             <?= $booking['booking_code'] ?>
                                         </a>
                                     </td>
-                                    <td><?= $booking['customer_name'] ?></td>
-                                    <td><?= formatDate($booking['booking_date']) ?></td>
-                                    <td><?= formatCurrency($booking['total_amount']) ?></td>
-                                    <td><?= getStatusBadge($booking['payment_status']) ?></td>
-                                    <td><?= getStatusBadge($booking['booking_status']) ?></td>
-                                    <td><?= $booking['creator_name'] ?></td>
+                                    <td class="col-customer"><?= $booking['customer_name'] ?></td>
+                                    <td class="col-booking-date"><?= formatDate($booking['booking_date']) ?></td>
+                                    <td class="col-total-amount"><?= formatCurrency($booking['total_amount']) ?></td>
+                                    <td class="col-payment-status"><?= getStatusBadge($booking['payment_status']) ?></td>
+                                    <td class="col-booking-status"><?= getStatusBadge($booking['booking_status']) ?></td>
+                                    <td class="col-creator"><?= $booking['creator_name'] ?></td>
                                     <td>
                                         <div class="action-dropdown">
                                             <button class="btn btn-sm btn-link" onclick="toggleActionMenu(this)">
@@ -224,5 +224,23 @@ $bookings = $stmt->fetchAll();
         </div>
     </div>
 </div>
+
+<script>
+// Initialize column visibility for bookings table
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('bookingsTable')) {
+        columnVisibility = new ColumnVisibility('#bookingsTable', 'bookings_columns_visibility');
+        columnVisibility.init([
+            { key: 'col-booking-code', label: 'Mã đặt chỗ' },
+            { key: 'col-customer', label: 'Khách hàng' },
+            { key: 'col-booking-date', label: 'Ngày đặt' },
+            { key: 'col-total-amount', label: 'Tổng tiền' },
+            { key: 'col-payment-status', label: 'TT Thanh toán' },
+            { key: 'col-booking-status', label: 'TT Booking' },
+            { key: 'col-creator', label: 'Người tạo' }
+        ]);
+    }
+});
+</script>
 
 <?php include '../../includes/footer.php'; ?>

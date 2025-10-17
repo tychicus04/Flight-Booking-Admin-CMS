@@ -18,6 +18,7 @@
     <!-- Custom JS -->
     <script src="<?= ASSETS_URL ?>js/sidebar.js"></script>
     <script src="<?= ASSETS_URL ?>js/table.js"></script>
+    <script src="<?= ASSETS_URL ?>js/column-visibility.js"></script>
     <script src="<?= ASSETS_URL ?>js/main.js"></script>
 </body>
 </html>

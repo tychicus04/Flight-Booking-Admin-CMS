@@ -120,41 +120,6 @@ $roles = $db->query($rolesQuery)->fetchAll();
                 <a href="add.php" class="btn btn-primary">
                     <i class="bi bi-plus-lg"></i> Thêm User mới
                 </a>
-                <div class="column-toggle">
-                    <button class="btn btn-outline-secondary" id="columnToggleBtn">
-                        <i class="bi bi-list-columns"></i> Cột
-                    </button>
-                    <div class="column-toggle-menu" id="columnToggleMenu">
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-id" checked>
-                            <label>ID</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-avatar" checked>
-                            <label>Avatar</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-username" checked>
-                            <label>Username</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-fullname" checked>
-                            <label>Họ và Tên</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-role" checked>
-                            <label>Vai trò</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-status" checked>
-                            <label>Trạng thái</label>
-                        </div>
-                        <div class="column-toggle-item">
-                            <input type="checkbox" class="column-checkbox" data-column="col-created" checked>
-                            <label>Ngày tạo</label>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="card-body">
@@ -166,13 +131,14 @@ $roles = $db->query($rolesQuery)->fetchAll();
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="usersTable">
                         <thead>
                             <tr>
                                 <th class="col-id">ID</th>
                                 <th class="col-avatar">Avatar</th>
                                 <th class="col-username">Username</th>
                                 <th class="col-fullname">Họ và Tên</th>
+                                <th class="col-email">Email</th>
                                 <th class="col-role">Vai trò</th>
                                 <th class="col-status">Trạng thái</th>
                                 <th class="col-created">Ngày tạo</th>
@@ -193,6 +159,7 @@ $roles = $db->query($rolesQuery)->fetchAll();
                                     </td>
                                     <td class="col-username"><?= $user['username'] ?></td>
                                     <td class="col-fullname"><?= $user['full_name'] ?></td>
+                                    <td class="col-email"><?= $user['email'] ?? 'N/A' ?></td>
                                     <td class="col-role">
                                         <span class="badge bg-info"><?= $user['role_name'] ?></span>
                                     </td>
@@ -253,5 +220,24 @@ $roles = $db->query($rolesQuery)->fetchAll();
         </div>
     </div>
 </div>
+
+<script>
+// Initialize column visibility for users table
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('usersTable')) {
+        columnVisibility = new ColumnVisibility('#usersTable', 'users_columns_visibility');
+        columnVisibility.init([
+            { key: 'col-id', label: 'ID' },
+            { key: 'col-avatar', label: 'Avatar' },
+            { key: 'col-username', label: 'Username' },
+            { key: 'col-fullname', label: 'Họ và Tên' },
+            { key: 'col-email', label: 'Email' },
+            { key: 'col-role', label: 'Vai trò' },
+            { key: 'col-status', label: 'Trạng thái' },
+            { key: 'col-created', label: 'Ngày tạo' }
+        ]);
+    }
+});
+</script>
 
 <?php include '../../includes/footer.php'; ?>

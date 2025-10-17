@@ -22,6 +22,7 @@ require_once __DIR__ . '/../config/constants.php';
     <link rel="stylesheet" href="<?= ASSETS_URL ?>css/sidebar.css">
     <link rel="stylesheet" href="<?= ASSETS_URL ?>css/table.css">
     <link rel="stylesheet" href="<?= ASSETS_URL ?>css/form.css">
+    <link rel="stylesheet" href="<?= ASSETS_URL ?>css/column-visibility.css">
 </head>
 <body>
     <div class="wrapper">
