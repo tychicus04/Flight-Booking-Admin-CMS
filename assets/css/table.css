@@ -1,0 +1,206 @@
+/* ============================================
+   FILE: assets/css/table.css
+   ============================================ */
+
+.table-responsive {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f8f9fc;
+    color: #5a5c69;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e3e6f0;
+    padding: 1rem;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fc;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Filter Section */
+.filter-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.filter-section.collapsed .filter-body {
+    display: none;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.filter-header h6 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-body {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e3e6f0;
+}
+
+/* Column Toggle Dropdown */
+.column-toggle {
+    position: relative;
+}
+
+.column-toggle-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+    min-width: 200px;
+    z-index: 1000;
+    display: none;
+}
+
+.column-toggle-menu.show {
+    display: block;
+}
+
+.column-toggle-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: background 0.2s;
+}
+
+.column-toggle-item:hover {
+    background: #f8f9fc;
+}
+
+.column-toggle-item input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* Action Dropdown */
+.action-dropdown {
+    position: relative;
+}
+
+.action-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+    z-index: 1000;
+    display: none;
+}
+
+.action-menu.show {
+    display: block;
+}
+
+.action-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #5a5c69;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.action-menu a:hover {
+    background: #f8f9fc;
+}
+
+.action-menu .divider {
+    height: 1px;
+    background: #e3e6f0;
+    margin: 0.25rem 0;
+}
+
+/* Pagination */
+.pagination {
+    margin: 1.5rem 0 0 0;
+}
+
+.page-link {
+    color: var(--primary-color);
+    border-color: #e3e6f0;
+    padding: 0.5rem 0.75rem;
+}
+
+.page-link:hover {
+    background-color: #f8f9fc;
+    border-color: #e3e6f0;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Table Tools */
+.table-tools {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-tools-left,
+.table-tools-right {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-color);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #d1d3e2;
+}

@@ -1,0 +1,176 @@
+
+/* ============================================
+   FILE: assets/css/form.css
+   ============================================ */
+
+.form-label {
+    font-weight: 600;
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.form-label.required::after {
+    content: "*";
+    color: var(--danger-color);
+    margin-left: 0.25rem;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #d1d3e2;
+    border-radius: 0.35rem;
+    padding: 0.625rem 0.75rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--danger-color);
+}
+
+.invalid-feedback {
+    color: var(--danger-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-text {
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* File Upload */
+.file-upload {
+    position: relative;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.file-upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: white;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.file-upload-label:hover {
+    background: #f8f9fc;
+    border-color: var(--primary-color);
+}
+
+.file-preview {
+    margin-top: 1rem;
+}
+
+.file-preview img {
+    max-width: 200px;
+    border-radius: 0.35rem;
+    border: 1px solid #d1d3e2;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e3e6f0;
+    margin-top: 1.5rem;
+}
+
+/* Multi-step Form */
+.form-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-steps::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e3e6f0;
+    z-index: 0;
+}
+
+.form-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    background: white;
+    padding: 0 1rem;
+}
+
+.form-step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e3e6f0;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-step.active .form-step-number {
+    background: var(--primary-color);
+    color: white;
+}
+
+.form-step.completed .form-step-number {
+    background: var(--success-color);
+    color: white;
+}
+
+.form-step-label {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+}
+
+.form-step.active .form-step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Toggle Switch */
+.form-switch {
+    padding-left: 2.5em;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+}
+
+/* Input Group */
+.input-group-text {
+    background: #f8f9fc;
+    border-color: #d1d3e2;
+    color: var(--secondary-color);
+}
