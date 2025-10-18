@@ -1,342 +1,429 @@
-// ============================================
-// FILE: assets/js/sidebar.js
-// ============================================
+/* ============================================
+   SIDEBAR JAVASCRIPT - WITH ACCORDION & POPUP
+   ============================================ */
+
+(function() {
+    'use strict';
+    
+    // Prevent duplicate initialization
+    if (window.SidebarLoaded) return;
+    window.SidebarLoaded = true;
 
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    const mainContent = document.querySelector('.main-content');
+    const mainContent = document.getElementById('mainContent') || document.querySelector('.main-content');
     
-    // Toggle sidebar
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('sidebar-collapsed');
-            
-            // Save state to localStorage
-            const isCollapsed = sidebar.classList.contains('collapsed');
-            localStorage.setItem('sidebarCollapsed', isCollapsed);
-        });
+    console.log('Sidebar:', sidebar);
+    console.log('MainContent:', mainContent);
+    console.log('SidebarToggle:', sidebarToggle);
+    
+    if (!sidebar) {
+        console.error('Sidebar element not found');
+        return;
     }
     
-    // Restore sidebar state
-    const sidebarCollapsed = localStorage.getItem('sidebarCollapsed');
-    if (sidebarCollapsed === 'true') {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('sidebar-collapsed');
+    if (!mainContent) {
+        console.warn('MainContent element not found');
     }
     
-    // Add title attribute for tooltips when collapsed
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        const text = link.querySelector('.nav-text');
-        if (text) {
-            link.setAttribute('title', text.textContent.trim());
-        }
+    // ============================================
+    // DISABLE DEFAULT TOOLTIPS/TITLES
+    // ============================================
+    // Remove title attributes to prevent browser tooltips
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.removeAttribute('title');
+        link.removeAttribute('data-bs-toggle');
+        link.removeAttribute('data-bs-placement');
     });
     
-    // Mobile sidebar toggle
-    if (window.innerWidth <= 768) {
-        sidebarToggle.addEventListener('click', function() {
+    // Restore state on load
+    if (window.innerWidth > 768) {
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed');
+        if (sidebarCollapsed === 'true') {
+            sidebar.classList.add('collapsed');
+            if (mainContent) {
+                mainContent.classList.add('sidebar-collapsed');
+            }
+        }
+    }
+    
+    setTimeout(() => {
+        document.documentElement.classList.remove('sidebar-collapsed-state');
+    }, 100);
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+        if (window.innerWidth > 768) {
+            sidebar.classList.toggle('collapsed');
+            if (mainContent) {
+                mainContent.classList.toggle('sidebar-collapsed');
+            }
+            
+            void sidebar.offsetWidth;
+            if (mainContent) {
+                void mainContent.offsetWidth;
+            }
+            
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            
+            if (isCollapsed) {
+                closeAllSubmenus();
+            }
+            
+            window.dispatchEvent(new Event('resize'));
+        } else {
             sidebar.classList.toggle('show');
+        }
+    }
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
         });
-        
-        // Close sidebar when clicking outside
-        document.addEventListener('click', function(e) {
+    }
+    
+    // Close sidebar on outside click (mobile)
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
             if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
                 sidebar.classList.remove('show');
             }
-        });
-    }
-});
-
-// ============================================
-// FILE: assets/js/table.js
-// ============================================
-
-// Column Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const columnToggleBtn = document.getElementById('columnToggleBtn');
-    const columnToggleMenu = document.getElementById('columnToggleMenu');
-    
-    if (columnToggleBtn) {
-        columnToggleBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            columnToggleMenu.classList.toggle('show');
-        });
-    }
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (columnToggleMenu && !columnToggleMenu.contains(e.target)) {
-            columnToggleMenu.classList.remove('show');
         }
     });
     
-    // Column toggle checkboxes
-    const columnCheckboxes = document.querySelectorAll('.column-checkbox');
-    columnCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const columnClass = this.dataset.column;
-            const columns = document.querySelectorAll('.' + columnClass);
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('show');
+                const sidebarCollapsed = localStorage.getItem('sidebarCollapsed');
+                if (sidebarCollapsed === 'true') {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                }
+            } else {
+                sidebar.classList.remove('collapsed');
+                if (mainContent) {
+                    mainContent.classList.remove('sidebar-collapsed');
+                }
+            }
+        }, 250);
+    });
+    
+    // Close all submenus
+    function closeAllSubmenus() {
+        document.querySelectorAll('.nav-submenu.show').forEach(submenu => {
+            submenu.classList.remove('show');
+        });
+        document.querySelectorAll('.nav-parent[aria-expanded="true"]').forEach(parent => {
+            parent.setAttribute('aria-expanded', 'false');
+        });
+    }
+    
+    // ============================================
+    // ACCORDION BEHAVIOR - One parent menu at a time
+    // ============================================
+    const parentLinks = document.querySelectorAll('.nav-parent');
+    
+    parentLinks.forEach(parent => {
+        parent.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            columns.forEach(col => {
-                if (this.checked) {
-                    col.style.display = '';
-                } else {
-                    col.style.display = 'none';
+            // Don't do anything if sidebar is collapsed (popup menu will handle it)
+            if (sidebar.classList.contains('collapsed')) {
+                return;
+            }
+            
+            const targetId = this.getAttribute('href').replace('#', '');
+            const targetSubmenu = document.getElementById(targetId);
+            
+            if (!targetSubmenu) return;
+            
+            const isCurrentlyOpen = targetSubmenu.classList.contains('show');
+            
+            // Close ALL other submenus (Accordion behavior)
+            document.querySelectorAll('.nav-submenu').forEach(submenu => {
+                if (submenu !== targetSubmenu) {
+                    submenu.classList.remove('show');
                 }
             });
             
-            // Save state to localStorage
-            const hiddenColumns = Array.from(columnCheckboxes)
-                .filter(cb => !cb.checked)
-                .map(cb => cb.dataset.column);
-            localStorage.setItem('hiddenColumns', JSON.stringify(hiddenColumns));
-        });
-    });
-    
-    // Restore column visibility
-    const hiddenColumns = JSON.parse(localStorage.getItem('hiddenColumns') || '[]');
-    hiddenColumns.forEach(columnClass => {
-        const checkbox = document.querySelector(`[data-column="${columnClass}"]`);
-        if (checkbox) {
-            checkbox.checked = false;
-            const columns = document.querySelectorAll('.' + columnClass);
-            columns.forEach(col => col.style.display = 'none');
-        }
-    });
-});
-
-// Action Dropdown
-function toggleActionMenu(button) {
-    const menu = button.nextElementSibling;
-    const allMenus = document.querySelectorAll('.action-menu');
-    
-    // Close all other menus
-    allMenus.forEach(m => {
-        if (m !== menu) {
-            m.classList.remove('show');
-        }
-    });
-    
-    menu.classList.toggle('show');
-    
-    // Close when clicking outside
-    document.addEventListener('click', function closeMenu(e) {
-        if (!button.contains(e.target) && !menu.contains(e.target)) {
-            menu.classList.remove('show');
-            document.removeEventListener('click', closeMenu);
-        }
-    });
-}
-
-// Filter Toggle
-function toggleFilter() {
-    const filterSection = document.querySelector('.filter-section');
-    if (filterSection) {
-        filterSection.classList.toggle('collapsed');
-        const icon = document.querySelector('.filter-header i');
-        if (icon) {
-            icon.classList.toggle('bi-funnel');
-            icon.classList.toggle('bi-funnel-fill');
-        }
-    }
-}
-
-// Delete Confirmation
-function confirmDelete(message = 'Bạn có chắc chắn muốn xóa?') {
-    return confirm(message);
-}
-
-// Select All Checkboxes
-function toggleSelectAll(source) {
-    const checkboxes = document.querySelectorAll('.row-checkbox');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = source.checked;
-    });
-    updateBulkActions();
-}
-
-function updateBulkActions() {
-    const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-    const bulkActions = document.getElementById('bulkActions');
-    
-    if (bulkActions) {
-        if (checkedBoxes.length > 0) {
-            bulkActions.style.display = 'block';
-            document.getElementById('selectedCount').textContent = checkedBoxes.length;
-        } else {
-            bulkActions.style.display = 'none';
-        }
-    }
-}
-
-// Search/Filter Form
-document.addEventListener('DOMContentLoaded', function() {
-    const filterForm = document.getElementById('filterForm');
-    if (filterForm) {
-        const resetBtn = filterForm.querySelector('[type="reset"]');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', function() {
-                setTimeout(() => filterForm.submit(), 100);
+            // Update aria-expanded for all parents
+            document.querySelectorAll('.nav-parent').forEach(p => {
+                if (p !== this) {
+                    p.setAttribute('aria-expanded', 'false');
+                }
             });
-        }
-    }
-});
-
-// ============================================
-// FILE: assets/js/main.js
-// ============================================
-
-// Auto-dismiss alerts
-document.addEventListener('DOMContentLoaded', function() {
-    const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }, 5000);
-    });
-});
-
-// Form validation
-document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('.needs-validation');
-    
-    forms.forEach(form => {
-        form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+            
+            // Toggle current submenu
+            if (isCurrentlyOpen) {
+                targetSubmenu.classList.remove('show');
+                this.setAttribute('aria-expanded', 'false');
+            } else {
+                targetSubmenu.classList.add('show');
+                this.setAttribute('aria-expanded', 'true');
             }
-            form.classList.add('was-validated');
         });
     });
+    
+    // ============================================
+    // POPUP MENU - When sidebar is collapsed
+    // ============================================
+    document.querySelectorAll('.nav-group').forEach(group => {
+        const parent = group.querySelector('.nav-parent');
+        const submenu = group.querySelector('.nav-submenu');
+        
+        if (!parent || !submenu) return;
+        
+        let popupMenu = null;
+        let hideTimer = null;
+        
+        // Show popup on hover
+        parent.addEventListener('mouseenter', function() {
+            if (!sidebar.classList.contains('collapsed') || window.innerWidth <= 768) return;
+            
+            clearTimeout(hideTimer);
+            
+            // Remove any existing popup
+            if (popupMenu) {
+                popupMenu.remove();
+            }
+            
+            // Clone submenu for popup
+            popupMenu = submenu.cloneNode(true);
+            popupMenu.classList.add('show', 'popup-menu-active');
+            popupMenu.style.display = 'block';
+            
+            // Get parent and sidebar position
+            const parentRect = parent.getBoundingClientRect();
+            const sidebarRect = sidebar.getBoundingClientRect();
+            
+            // Initial position (will be adjusted after append)
+            popupMenu.style.position = 'fixed';
+            popupMenu.style.zIndex = '1050';
+            popupMenu.style.visibility = 'hidden'; // Hide until positioned correctly
+            
+            // Add to body first
+            document.body.appendChild(popupMenu);
+            
+            // Calculate and set final position
+            const popupRect = popupMenu.getBoundingClientRect();
+            
+            // Horizontal: No gap - attach directly to sidebar
+            let leftPosition = sidebarRect.right;
+            
+            // Vertical: align with parent icon top
+            let topPosition = parentRect.top;
+            
+            // Adjust if overflow bottom
+            if (topPosition + popupRect.height > window.innerHeight - 10) {
+                topPosition = Math.max(10, window.innerHeight - popupRect.height - 10);
+            }
+            
+            // Adjust if overflow top
+            if (topPosition < 10) {
+                topPosition = 10;
+            }
+            
+            // Adjust if overflow right
+            if (leftPosition + popupRect.width > window.innerWidth - 10) {
+                leftPosition = window.innerWidth - popupRect.width - 10;
+            }
+            
+            // Apply final positions
+            popupMenu.style.top = topPosition + 'px';
+            popupMenu.style.left = leftPosition + 'px';
+            popupMenu.style.visibility = 'visible'; // Show popup
+            
+            // Keep popup visible when hovering over it
+            popupMenu.addEventListener('mouseenter', function() {
+                clearTimeout(hideTimer);
+            });
+            
+            popupMenu.addEventListener('mouseleave', function() {
+                hideTimer = setTimeout(() => {
+                    if (popupMenu) {
+                        popupMenu.remove();
+                        popupMenu = null;
+                    }
+                }, 100);
+            });
+        });
+        
+        // Hide popup when leaving parent
+        parent.addEventListener('mouseleave', function() {
+            hideTimer = setTimeout(() => {
+                if (popupMenu && !popupMenu.matches(':hover')) {
+                    popupMenu.remove();
+                    popupMenu = null;
+                }
+            }, 100);
+        });
+    });
+    
+    // ============================================
+    // TOOLTIP/POPUP for Single Nav Links (no submenu)
+    // ============================================
+    // Select only direct nav-links that are NOT nav-parent
+    document.querySelectorAll('.sidebar-nav > .nav-link:not(.nav-parent)').forEach(link => {
+        let popup = null;
+        let hideTimer = null;
+        
+        link.addEventListener('mouseenter', function() {
+            // Only show popup when sidebar is collapsed
+            if (!sidebar.classList.contains('collapsed') || window.innerWidth <= 768) return;
+            
+            clearTimeout(hideTimer);
+            
+            // Remove existing popup
+            if (popup) {
+                popup.remove();
+                popup = null;
+            }
+            
+            // Get nav text and icon
+            const navText = this.querySelector('.nav-text');
+            const navIcon = this.querySelector('i');
+            if (!navText) return;
+            
+            const text = navText.textContent.trim();
+            const iconClass = navIcon ? navIcon.className : '';
+            const href = this.getAttribute('href');
+            if (!text) return;
+            
+            // Create popup (similar to submenu popup)
+            popup = document.createElement('div');
+            popup.className = 'nav-submenu popup-menu-active show';
+            popup.style.display = 'block';
+            
+            // Create single link inside popup
+            const popupLink = document.createElement('a');
+            popupLink.className = 'nav-link';
+            popupLink.href = href;
+            if (iconClass) {
+                const icon = document.createElement('i');
+                icon.className = iconClass;
+                popupLink.appendChild(icon);
+            }
+            const textSpan = document.createElement('span');
+            textSpan.className = 'nav-text';
+            textSpan.textContent = text;
+            popupLink.appendChild(textSpan);
+            
+            popup.appendChild(popupLink);
+            
+            // Get positions
+            const linkRect = this.getBoundingClientRect();
+            const sidebarRect = sidebar.getBoundingClientRect();
+            
+            // Initial position
+            popup.style.position = 'fixed';
+            popup.style.zIndex = '1050';
+            popup.style.visibility = 'hidden'; // Hide until positioned correctly
+            
+            // Add to body first
+            document.body.appendChild(popup);
+            
+            // Calculate and set final position
+            const popupRect = popup.getBoundingClientRect();
+            
+            // Horizontal: No gap - attach directly to sidebar
+            let leftPosition = sidebarRect.right;
+            
+            // Vertical: align with link top
+            let topPosition = linkRect.top;
+            
+            // Adjust if overflow bottom
+            if (topPosition + popupRect.height > window.innerHeight - 10) {
+                topPosition = Math.max(10, window.innerHeight - popupRect.height - 10);
+            }
+            
+            // Adjust if overflow top
+            if (topPosition < 10) {
+                topPosition = 10;
+            }
+            
+            // Adjust if overflow right
+            if (leftPosition + popupRect.width > window.innerWidth - 10) {
+                leftPosition = window.innerWidth - popupRect.width - 10;
+            }
+            
+            // Apply final positions
+            popup.style.top = topPosition + 'px';
+            popup.style.left = leftPosition + 'px';
+            popup.style.visibility = 'visible'; // Show popup
+            
+            // Keep popup visible when hovering over it
+            popup.addEventListener('mouseenter', function() {
+                clearTimeout(hideTimer);
+            });
+            
+            popup.addEventListener('mouseleave', function() {
+                hideTimer = setTimeout(() => {
+                    if (popup) {
+                        popup.remove();
+                        popup = null;
+                    }
+                }, 100);
+            });
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            hideTimer = setTimeout(() => {
+                if (popup && !popup.matches(':hover')) {
+                    popup.remove();
+                    popup = null;
+                }
+            }, 100);
+        });
+    });
+    
+    // ============================================
+    // SEARCH FUNCTIONALITY
+    // ============================================
+    const searchInput = document.getElementById('sidebarSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                // Show all items
+                document.querySelectorAll('.nav-link, .nav-group').forEach(item => {
+                    item.style.display = '';
+                });
+                return;
+            }
+            
+            // Filter menu items
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    link.style.display = '';
+                    // Show parent group if it's a submenu item
+                    const parentGroup = link.closest('.nav-group');
+                    if (parentGroup) {
+                        parentGroup.style.display = '';
+                        const submenu = link.closest('.nav-submenu');
+                        if (submenu) {
+                            submenu.classList.add('show');
+                        }
+                    }
+                } else {
+                    // Don't hide parent links, only regular links
+                    if (!link.classList.contains('nav-parent')) {
+                        link.style.display = 'none';
+                    }
+                }
+            });
+        });
+    }
 });
 
-// File upload preview
-function previewImage(input) {
-    const preview = document.getElementById('imagePreview');
-    const file = input.files[0];
-    
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// Format currency input
-function formatCurrency(input) {
-    let value = input.value.replace(/[^\d]/g, '');
-    value = parseInt(value || 0);
-    input.value = value.toLocaleString('vi-VN');
-}
-
-// Debounce function for search
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Ajax search
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-    searchInput.addEventListener('input', debounce(function(e) {
-        const searchTerm = e.target.value;
-        // Implement your search logic here
-        console.log('Searching for:', searchTerm);
-    }, 500));
-}
-
-// Confirmation dialogs
-function confirmAction(message, callback) {
-    if (confirm(message)) {
-        callback();
-    }
-}
-
-// Toast notifications
-function showToast(message, type = 'success') {
-    const toastContainer = document.getElementById('toastContainer') || createToastContainer();
-    
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    toastContainer.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
-}
-
-function createToastContainer() {
-    const container = document.createElement('div');
-    container.id = 'toastContainer';
-    container.className = 'toast-container position-fixed top-0 end-0 p-3';
-    container.style.zIndex = '9999';
-    document.body.appendChild(container);
-    return container;
-}
-
-// Print function
-function printContent(elementId) {
-    const content = document.getElementById(elementId);
-    if (content) {
-        const printWindow = window.open('', '', 'height=600,width=800');
-        printWindow.document.write('<html><head><title>Print</title>');
-        printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(content.innerHTML);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-    }
-}
-
-// Export to CSV
-function exportTableToCSV(filename) {
-    const table = document.querySelector('table');
-    if (!table) return;
-    
-    let csv = [];
-    const rows = table.querySelectorAll('tr');
-    
-    rows.forEach(row => {
-        let rowData = [];
-        const cols = row.querySelectorAll('td, th');
-        cols.forEach(col => {
-            rowData.push('"' + col.textContent.trim() + '"');
-        });
-        csv.push(rowData.join(','));
-    });
-    
-    const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
-    const downloadLink = document.createElement('a');
-    downloadLink.download = filename;
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.style.display = 'none';
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-}
+})(); // End IIFE

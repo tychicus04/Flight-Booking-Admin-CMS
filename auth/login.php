@@ -1,10 +1,11 @@
 <?php
 // ============================================
-// FILE: auth/login.php
+// FILE: auth/login.php (UPDATED)
 // ============================================
 session_start();
 require_once '../config/database.php';
 require_once '../config/constants.php';
+require_once '../config/log_helper.php';
 
 $error = '';
 
@@ -34,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role_id'] = $user['role_id'];
             $_SESSION['role_name'] = $user['role_name'];
             $_SESSION['avatar'] = $user['avatar'];
+            
+            // Log login activity
+            logLogin($user['id']);
             
             redirect('index.php');
         } else {

@@ -27,10 +27,16 @@ require_once __DIR__ . '/../config/constants.php';
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <?php include __DIR__ . '/sidebar.php'; ?>
+        <?php 
+        // Ensure sidebar is included only once
+        if (!defined('SIDEBAR_INCLUDED')) {
+            define('SIDEBAR_INCLUDED', true);
+            include __DIR__ . '/sidebar.php';
+        }
+        ?>
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content" id="mainContent">
             <!-- Header -->
             <header class="header">
                 <div class="header-left">

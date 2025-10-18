@@ -3,6 +3,13 @@
 // Column Visibility Toggle Component
 // ============================================
 
+(function() {
+    'use strict';
+    
+    // Prevent duplicate initialization
+    if (window.ColumnVisibilityLoaded) return;
+    window.ColumnVisibilityLoaded = true;
+
 class ColumnVisibility {
     constructor(tableSelector, storageKey) {
         this.tableSelector = tableSelector;
@@ -178,4 +185,9 @@ class ColumnVisibility {
 }
 
 // Global instance variable
-let columnVisibility;
+window.columnVisibility = null;
+
+// Export to global scope
+window.ColumnVisibility = ColumnVisibility;
+
+})();
