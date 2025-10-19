@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 18, 2025 at 09:53 AM
+-- Generation Time: Oct 19, 2025 at 05:52 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -120,7 +120,14 @@ CREATE TABLE `login_history` (
 INSERT INTO `login_history` (`id`, `user_id`, `ip_address`, `user_agent`, `login_time`) VALUES
 (1, 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0', '2025-10-18 07:21:53'),
 (2, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 07:26:50'),
-(3, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 07:27:13');
+(3, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 07:27:13'),
+(4, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 08:15:17'),
+(5, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 09:44:24'),
+(6, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 10:18:12'),
+(7, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-18 10:33:03'),
+(8, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-19 14:10:46'),
+(9, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-19 14:37:27'),
+(10, 1, '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15', '2025-10-19 15:21:36');
 
 -- --------------------------------------------------------
 
@@ -259,7 +266,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `full_name`, `email`, `avatar`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '$2a$12$rQplaO5v83GsLMNWNdn.vuEtS/mh8t4D0D8LtuG/mURhLZzuxB4f6', 'Administrator', 'admin@example.com', NULL, 1, 'active', '2025-10-17 11:00:48', '2025-10-17 11:19:57');
+(1, 'admin', '$2a$12$rQplaO5v83GsLMNWNdn.vuEtS/mh8t4D0D8LtuG/mURhLZzuxB4f6', 'Administrator', 'admin@example.com', '68f4f48223182.png', 1, 'active', '2025-10-17 11:00:48', '2025-10-19 14:24:02');
 
 -- --------------------------------------------------------
 
@@ -423,7 +430,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `login_history`
 --
 ALTER TABLE `login_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `operation_logs`

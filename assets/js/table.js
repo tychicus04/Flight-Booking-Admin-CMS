@@ -58,27 +58,114 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Action Dropdown
-function toggleActionMenu(button) {
-    const menu = button.nextElementSibling;
-    const allMenus = document.querySelectorAll('.action-menu');
-    
-    // Close all other menus
-    allMenus.forEach(m => {
-        if (m !== menu) {
-            m.classList.remove('show');
+(function() {
+    let toggleTimeout = null;
+
+    window.toggleActionMenu = function(button) {
+        const menu = button.nextElementSibling;
+        const allMenus = document.querySelectorAll('.action-menu');
+        
+        // Close all other menus
+        allMenus.forEach(m => {
+            if (m !== menu) {
+                m.classList.remove('show');
+            }
+        });
+        
+        // Toggle current menu
+        const isShowing = !menu.classList.contains('show');
+        menu.classList.toggle('show');
+        
+        // Position menu using fixed positioning if showing
+        if (isShowing) {
+            const buttonRect = button.getBoundingClientRect();
+            
+            // Default position: below button, aligned to right
+            let top = buttonRect.bottom + 4;
+            let left = buttonRect.right;
+            
+            // Show menu to get its dimensions
+            menu.style.display = 'block';
+            const menuRect = menu.getBoundingClientRect();
+            
+            // Adjust left position (align right edge of menu with button)
+            left = buttonRect.right - menuRect.width;
+            
+            // Check if menu overflows bottom of viewport
+            if (top + menuRect.height > window.innerHeight - 10) {
+                // Position above button instead
+                top = buttonRect.top - menuRect.height - 4;
+            }
+            
+            // Check if menu overflows top
+            if (top < 10) {
+                top = 10;
+            }
+            
+            // Check if menu overflows left
+            if (left < 10) {
+                left = 10;
+            }
+            
+            // Check if menu overflows right
+            if (left + menuRect.width > window.innerWidth - 10) {
+                left = window.innerWidth - menuRect.width - 10;
+            }
+            
+            // Apply positions
+            menu.style.top = top + 'px';
+            menu.style.left = left + 'px';
         }
-    });
-    
-    menu.classList.toggle('show');
-    
-    // Close when clicking outside
-    document.addEventListener('click', function closeMenu(e) {
-        if (!button.contains(e.target) && !menu.contains(e.target)) {
+    };
+
+    // Close all action menus when clicking outside
+    document.addEventListener('click', function(e) {
+        // Clear any pending timeout
+        if (toggleTimeout) {
+            clearTimeout(toggleTimeout);
+        }
+        
+        // Check if click is on action button
+        const actionButton = e.target.closest('.action-dropdown button');
+        if (actionButton) {
+            e.preventDefault();
+            window.toggleActionMenu(actionButton);
+            // Set a flag briefly to prevent immediate closing
+            toggleTimeout = setTimeout(() => {
+                toggleTimeout = null;
+            }, 50);
+            return;
+        }
+        
+        // Skip if we just toggled
+        if (toggleTimeout) {
+            return;
+        }
+        
+        // Check if click is inside action-dropdown container
+        if (e.target.closest('.action-dropdown')) {
+            return;
+        }
+        
+        // Check if click is inside action-menu
+        const clickedMenu = e.target.closest('.action-menu');
+        if (clickedMenu) {
+            // If clicked on a link, close the menu
+            if (e.target.closest('.action-menu a')) {
+                document.querySelectorAll('.action-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+            // Otherwise keep menu open
+            return;
+        }
+        
+        // Click is outside - close all menus
+        document.querySelectorAll('.action-menu.show').forEach(menu => {
             menu.classList.remove('show');
-            document.removeEventListener('click', closeMenu);
-        }
+        });
     });
-}
+})();
 
 // Filter Toggle
 function toggleFilter() {

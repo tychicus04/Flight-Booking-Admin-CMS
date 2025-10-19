@@ -61,7 +61,7 @@ $roles = $db->query($query)->fetchAll();
                                     <td><?= formatDateTime($role['created_at']) ?></td>
                                     <td>
                                         <div class="action-dropdown">
-                                            <button class="btn btn-sm btn-link" onclick="toggleActionMenu(this)">
+                                            <button class="btn btn-sm btn-link">
                                                 <i class="bi bi-three-dots-vertical"></i>
                                             </button>
                                             <div class="action-menu">

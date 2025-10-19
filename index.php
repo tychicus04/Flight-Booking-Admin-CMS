@@ -49,90 +49,80 @@ $bookingStats = $db->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container-fluid">
+    <!-- Welcome Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <h2>Chào mừng, <?= $_SESSION['full_name'] ?>!</h2>
-            <p class="text-muted">Đây là tổng quan về hệ thống quản lý booking</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">Dashboard</h2>
+                    <p class="text-muted mb-0">Chào mừng trở lại, <strong><?= $_SESSION['full_name'] ?></strong></p>
+                </div>
+                <div>
+                    <a href="<?= BASE_URL ?>modules/bookings/add.php" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Tạo Booking mới
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-left-primary">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Tổng Users
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">
-                                <?= number_format($stats['total_users']) ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-people fs-2 text-gray-300"></i>
-                        </div>
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Users</div>
+                        <div class="stat-value"><?= number_format($stats['total_users']) ?></div>
+                        <div class="stat-desc">Users đang hoạt động</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-left-success">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Tổng Bookings
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">
-                                <?= number_format($stats['total_bookings']) ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-ticket-perforated fs-2 text-gray-300"></i>
-                        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-ticket-perforated-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Bookings</div>
+                        <div class="stat-value"><?= number_format($stats['total_bookings']) ?></div>
+                        <div class="stat-desc">Tổng số vé đã đặt</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-left-info">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Bookings tháng này
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">
-                                <?= number_format($stats['bookings_this_month']) ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-calendar-check fs-2 text-gray-300"></i>
-                        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Booking tháng này</div>
+                        <div class="stat-value"><?= number_format($stats['bookings_this_month']) ?></div>
+                        <div class="stat-desc">So với tháng trước</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-left-warning">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Tổng doanh thu
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold">
-                                <?= formatCurrency($stats['total_revenue']) ?>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-currency-dollar fs-2 text-gray-300"></i>
-                        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng doanh thu</div>
+                        <div class="stat-value"><?= formatCurrency($stats['total_revenue']) ?></div>
+                        <div class="stat-desc">Đã thanh toán</div>
                     </div>
                 </div>
             </div>
@@ -275,20 +265,171 @@ $bookingStats = $db->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
 </div>
 
 <style>
-.border-left-primary {
-    border-left: 0.25rem solid #4e73df !important;
+/* Modern Stat Cards */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
 }
-.border-left-success {
-    border-left: 0.25rem solid #1cc88a !important;
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
-.border-left-info {
-    border-left: 0.25rem solid #36b9cc !important;
+
+.stat-card-body {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
-.border-left-warning {
-    border-left: 0.25rem solid #f6c23e !important;
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
 }
-.text-gray-300 {
-    color: #dddfeb !important;
+
+.stat-card-primary .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stat-card-success .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.stat-card-info .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.stat-card-warning .stat-icon {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.stat-desc {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* Card Improvements */
+.card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 20px 24px;
+}
+
+.card-header h6 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* Table Modern Style */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: 600;
+    font-size: 13px;
+    color: #374151;
+    padding: 12px 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.table tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Alert Improvements */
+.alert {
+    border: none;
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.alert-warning {
+    background: #fff8e1;
+    color: #f59e0b;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: #10b981;
+}
+
+/* List Group */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 14px 0;
+    font-size: 14px;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.badge {
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 12px;
 }
 </style>
 
@@ -307,9 +448,9 @@ if (ctx) {
                     <?= $bookingStats['pending'] ?? 0 ?>,
                     <?= $bookingStats['cancelled'] ?? 0 ?>
                 ],
-                backgroundColor: ['#1cc88a', '#f6c23e', '#e74a3b'],
-                hoverBackgroundColor: ['#17a673', '#dda20a', '#be2617'],
-                hoverBorderColor: "rgba(234, 236, 244, 1)",
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                hoverBackgroundColor: ['#059669', '#d97706', '#dc2626'],
+                borderWidth: 0,
             }],
         },
         options: {
@@ -317,9 +458,21 @@ if (ctx) {
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    backgroundColor: '#1f2937',
+                    padding: 12,
+                    titleFont: {
+                        size: 14
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    borderWidth: 0,
+                    cornerRadius: 8
                 }
             },
-            cutout: '80%',
+            cutout: '75%',
         },
     });
 }

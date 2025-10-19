@@ -236,6 +236,35 @@ $bookings = $stmt->fetchAll();
             <?php endif; ?>
         </div>
     </div>
+                                                </a>
+                                                <a href="detail.php?id=<?= $booking['id'] ?>" class="action-item">
+                                                    <i class="bi bi-eye"></i>
+                                                    <span>Xem chi tiết</span>
+                                                </a>
+                                                <a href="edit.php?id=<?= $booking['id'] ?>" class="action-item">
+                                                    <i class="bi bi-pencil"></i>
+                                                    <span>Chỉnh sửa</span>
+                                                </a>
+                                                <?php if ($booking['booking_status'] != 'cancelled'): ?>
+                                                    <div class="action-divider"></div>
+                                                    <a href="cancel.php?id=<?= $booking['id'] ?>" 
+                                                       class="action-item action-danger"
+                                                       onclick="return confirmDelete('Bạn có chắc chắn muốn hủy booking này?')">
+                                                        <i class="bi bi-x-circle"></i>
+                                                        <span>Hủy booking</span>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 
     <!-- Pagination -->
     <?php if (isset($totalPages) && $totalPages > 1): ?>
