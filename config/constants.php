@@ -5,7 +5,7 @@
 // ============================================
 
 // Đường dẫn gốc
-define('BASE_URL', 'http://aliceblue-owl-891026.hostingersite.com/');
+define('BASE_URL', 'http://localhost/flight_booking_admin/');
 define('ASSETS_URL', BASE_URL . 'assets/');
 define('UPLOAD_PATH', __DIR__ . '/../uploads/');
 

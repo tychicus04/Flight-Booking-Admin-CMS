@@ -5,9 +5,9 @@
 
 class Database {
     private $host = "localhost";
-    private $db_name = "u350721386_vida";
-    private $username = "u350721386_vida";
-    private $password = "Tai2172004.";
+    private $db_name = "flight_booking_admin";
+    private $username = "root";
+    private $password = "";
     public $conn;
 
     public function getConnection() {
